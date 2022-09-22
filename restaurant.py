@@ -1,5 +1,6 @@
 ## Simple restaurant manager to work on OOP in Python
 
+
 class Restaurant:
     def __init__(self, name):
         self.name = name
@@ -27,11 +28,14 @@ class Restaurant:
     
 class Table():
 
+    time_slots = {}
+    times = ["17-19","19-21","21-23"]
+
     def __init__(self, name, books):
         self.name = name
         self.books = books
-
-    def time_slots(self):
+        
+    def time_slots(self): ## not sure if needed
         time_slots = {}
         times = ["17-19","19-21","21-23"]
         for number in tables:
@@ -45,7 +49,32 @@ class Table():
             print("|%s| " % ("|".join(b)))
     
     def book_time(self):
-        self.books[0][2] = 'XXXXXXX'
+        while True:
+            choice = input('Please choose time slot: ')
+            while choice not in self.times:
+                choice = input('Please choose time slot: ')
+            for i in self.times:
+                if choice == i:
+                    a = self.times.index(i)
+            while self.books[0][a] == 'XXXXXXX':
+                print("Table already booked !")
+                break
+            self.books[0][a] = 'XXXXXXX'
+            return True
+    
+    def fully_booked(self):
+        booked=True
+        for i in self.books[0]:
+            if 'XXXXXXX' != i:
+                booked = False
+                break
+            else:
+                booked = True
+        return booked
+
+
+# class Guest()
+            
 
                         
 rest1 = Restaurant(input("Please provide the name of the restaurant: "))
@@ -60,5 +89,19 @@ for i in range(len(tables)):
     objs.append(Table(i, [["       "] * 3 for i in range(1)]))
     
 for i in range(len(objs)):
-    objs[i].print_time_slots()
+    if objs[i].fully_booked()==True:
+        pass
+    else:
+        objs[i].print_time_slots()
+
+## work here
+objs[1].book_time()
+
+for i in range(len(objs)):
+    if objs[i].fully_booked()==True:
+        pass
+    else:
+        objs[i].print_time_slots()
+
+
 
