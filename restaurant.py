@@ -1,5 +1,6 @@
 ## Simple restaurant manager to work on OOP in Python
 
+yes_no = ['yes','no']
 
 class Restaurant:
     def __init__(self, name):
@@ -10,7 +11,7 @@ class Restaurant:
 
     def tables(self):
         result = int(input("How many tables in the restaurant ?: "))
-        while tables not in range(1,20):
+        while result not in range(1,20):
             print("Please provide a proper number !")
             result = int(input("How many tables in the restaurant ?: "))
         return list(range(1, int(result)+1))
@@ -19,7 +20,7 @@ class Restaurant:
         result = []
         print("Please provide amount of seats for each table !")
         for s in range(len(tables)):
-            seats.append(int(input(f"Table {s+1}: ")))
+            result.append(int(input(f"Table {s+1}: ")))
         return result
     
     def seats_to_tables(self):
@@ -48,7 +49,7 @@ class Table():
         for b in self.books:
             print("|{}| ".format("|".join(b)))
     
-    def book_time(self):
+    def book_check(self):
         while True:
             choice = input('Please choose time slot: ')
             while choice not in self.times:
@@ -56,12 +57,12 @@ class Table():
             for t in self.times:
                 if choice == t:
                     a = self.times.index(t)
-            while self.books[0][a] == 'XXXXXXX':
+            if self.books[0][a] == 'XXXXXXX':
                 print("Table already booked !")
-                break
-            self.books[0][a] = 'XXXXXXX'
-            return True
-    
+                return False
+            else:
+                return a
+                    
     def fully_booked(self):
         booked=True
         for b in self.books[0]:
@@ -72,22 +73,58 @@ class Table():
                 booked = True
         return booked
 
+    def book_table(self, a):
+        self.books[0][a] = 'XXXXXXX'
+        print('Table booked !')
 
-# class Guest()
-            
 
-                        
+class Guest:
+    def __init__(self, name, phone, guests):
+        self.name = name
+        self.phone = phone 
+        self.guest = guests
+    
+    def guest_creation(self):
+        print(f"Guest {self.name} created !")
+
+def new_guest():
+    guest_name = input("Enter guest name: ")
+    guest_phone = input("Enter guest phone number: ")
+    guest_guests = input("Enter the number of guest: ")
+
+    guest_new= Guest(guest_name,guest_phone,guest_guests)
+    guest_new.guest_creation()
+    return guest_new
+
+
 rest1 = Restaurant(input("Please provide the name of the restaurant: "))
 rest1.print_name()
 tables = rest1.tables()
 seats = rest1.seats()
 s2t = rest1.seats_to_tables()
 
+##Creating new guest:
+guest_list=[]
+
+while True:
+    
+    choice = input('Would you like to add a new guest ?: ')
+    while choice not in yes_no:
+        choice = input('Would you like to add a new guest ?: ')
+    if choice.lower() == 'no':
+        break
+    else:
+        for i in range(1):
+            new=new_guest()
+            guest_list.append(new)
+            
+print(guest_list)
+
 objs = []
 
 for i, val in enumerate(tables):
     objs.append(Table(i, [["       "] * 3 for i in range(1)]))
-    
+
 for i, val in enumerate(objs):
     if val.fully_booked() is True:
         pass
@@ -95,7 +132,7 @@ for i, val in enumerate(objs):
         val.print_time_slots()
 
 ## work here
-objs[1].book_time()
+table_choice = objs[1].book_check()
 
 for i, val in enumerate(objs):
     if val.fully_booked()==True:
