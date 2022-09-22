@@ -25,7 +25,7 @@ class Restaurant:
         s2t = dict(zip(tables, seats))
         return s2t
     
-class Booking():
+class Table():
 
     def __init__(self, name, books):
         self.name = name
@@ -57,7 +57,7 @@ s2t = rest1.seats_to_tables()
 objs = []
 
 for i in range(len(tables)):
-    objs.append(Booking(i, [["       "] * 3 for i in range(1)]))
+    objs.append(Table(i, [["       "] * 3 for i in range(1)]))
     
 for i in range(len(objs)):
     objs[i].print_time_slots()
