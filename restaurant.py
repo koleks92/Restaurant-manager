@@ -9,22 +9,22 @@ class Restaurant:
         print(f"This is the {self.name} booking manager\nWelcome !\n")
 
     def tables(self):
-        tables = int(input("How many tables in the restaurant ?: "))
+        result = int(input("How many tables in the restaurant ?: "))
         while tables not in range(1,20):
             print("Please provide a proper number !")
-            tables = int(input("How many tables in the restaurant ?: "))
-        return list(range(1, int(tables)+1))
+            result = int(input("How many tables in the restaurant ?: "))
+        return list(range(1, int(result)+1))
         
     def seats(self):
-        seats = []
+        result = []
         print("Please provide amount of seats for each table !")
-        for i in range(len(tables)):
-            seats.append(int(input(f"Table {i+1}: ")))
-        return seats
+        for s in range(len(tables)):
+            seats.append(int(input(f"Table {s+1}: ")))
+        return result
     
     def seats_to_tables(self):
-        s2t = dict(zip(tables, seats))
-        return s2t
+        result = dict(zip(tables, seats))
+        return result
     
 class Table():
 
@@ -35,27 +35,27 @@ class Table():
         self.name = name
         self.books = books
         
-    def time_slots(self): ## not sure if needed
-        time_slots = {}
-        times = ["17-19","19-21","21-23"]
-        for number in tables:
-            time_slots[number] = times
-        return time_slots
+    # def time_slots(self): ## not sure if needed
+    #     time_slots = {}
+    #     times = ["17-19","19-21","21-23"]
+    #     for number in tables:
+    #         time_slots[number] = times
+    #     return time_slots
 
     def print_time_slots(self):
         print(f"\nTable {self.name+1} timeslots:")
         print("| 17-19 | 19-21 | 21-23 |")
         for b in self.books:
-            print("|%s| " % ("|".join(b)))
+            print("|{}| ".format("|".join(b)))
     
     def book_time(self):
         while True:
             choice = input('Please choose time slot: ')
             while choice not in self.times:
                 choice = input('Please choose time slot: ')
-            for i in self.times:
-                if choice == i:
-                    a = self.times.index(i)
+            for t in self.times:
+                if choice == t:
+                    a = self.times.index(t)
             while self.books[0][a] == 'XXXXXXX':
                 print("Table already booked !")
                 break
@@ -64,8 +64,8 @@ class Table():
     
     def fully_booked(self):
         booked=True
-        for i in self.books[0]:
-            if 'XXXXXXX' != i:
+        for b in self.books[0]:
+            if 'XXXXXXX' != b:
                 booked = False
                 break
             else:
@@ -85,23 +85,23 @@ s2t = rest1.seats_to_tables()
 
 objs = []
 
-for i in range(len(tables)):
+for i, val in enumerate(tables):
     objs.append(Table(i, [["       "] * 3 for i in range(1)]))
     
-for i in range(len(objs)):
-    if objs[i].fully_booked()==True:
+for i, val in enumerate(objs):
+    if val.fully_booked() is True:
         pass
     else:
-        objs[i].print_time_slots()
+        val.print_time_slots()
 
 ## work here
 objs[1].book_time()
 
-for i in range(len(objs)):
-    if objs[i].fully_booked()==True:
+for i, val in enumerate(objs):
+    if val.fully_booked()==True:
         pass
     else:
-        objs[i].print_time_slots()
+        val.print_time_slots()
 
 
 
