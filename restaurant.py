@@ -59,7 +59,6 @@ objs = []
 for i in range(len(tables)):
     objs.append(Booking(i, [["       "] * 3 for i in range(1)]))
     
-# print(objs[].print_time_slots())
 for i in range(len(objs)):
     objs[i].print_time_slots()
 
