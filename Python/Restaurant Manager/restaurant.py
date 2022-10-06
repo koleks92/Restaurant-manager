@@ -1,13 +1,71 @@
 ## Simple restaurant manager to work on OOP in Python
-
-# Global variables
 from curses.ascii import isdigit
 
+# Global variables
 
 yes_no = ['yes','no']
 tables_list = []
 guest_list=[]
 times = ["17-19","19-21","21-23"]
+
+class Menu:
+    ''' Menu class'''
+    def print_menu(self):
+        '''Printing main menu'''
+        print("1.Guests")
+        print("2.Booking")
+        print("3.Time table")
+        print("4:Restaurant")
+        print("5.Exit")
+        print("")
+
+    def menu_choice_5(self):
+        menu_choice = input('Please choose a number: ')
+        while menu_choice.isnumeric() is False and menu_choice not in '12345':
+            print("Please provide a correct number (1-5) !")
+            menu_choice = input('Please choose a number: ')
+        return menu_choice
+
+    def menu_choice_3(self):
+        menu_choice = input('Please choose a number: ')
+        while menu_choice.isnumeric() is False and menu_choice not in '123':
+            print("Please provide a correct number (1-5) !")
+            menu_choice = input('Please choose a number: ')
+        return menu_choice
+    
+    def guests(self):
+        print("1.Add a new guest")
+        print("2.Remove guest")
+        print("3.Go back to Main Menu")
+
+    def booking(self):
+        print("1.Make a new booking")
+        print("2.Remove a booking")
+        print("3.Go back to Main Menu")
+
+    def time_table(self):
+        for i,val in enumerate(tables_list):
+            tables_list[i].print_time_slots()
+
+    def restaurant(self):
+        print("1.Restart restaurant !")
+        print("2.Create a new restaurant !")
+        print("3.Go back to Main menu")
+    
+    def exit(self):
+        choice_exit = input("Are you sure you want to quit ?: ")
+        while choice_exit.lower() not in yes_no:
+            print("Please provide a valid answer(yes or no) !")
+            choice_exit = input("Are you sure you want to quit ?: ")
+        if choice_exit.lower() == 'yes':
+            quit()
+        else:
+            self.print_menu()
+            
+
+
+    
+
 
 class Restaurant: 
     ''' Restaurant class, basic info about restaurant '''
@@ -146,7 +204,6 @@ def create_tables():
 
 def guests(): 
     while True:
-        
         choice = input('Would you like to add a new guest ?: ')
         while choice not in yes_no:
             choice = input('Would you like to add a new guest ?: ')
@@ -159,15 +216,22 @@ def guests():
 
 ####### Main logic
 
+
+##
+
 ## Restaurant Main
 
 rest1 = Restaurant(input("Please provide the name of the restaurant: "))
-rest1.print_name()
 tables = rest1.tables() ## How many tables
 seats = rest1.seats() ## How many seates for each table
 s2t = rest1.seats_to_tables() ## Seats together with tables
 create_tables() ## Create tables
 guests() ## Create guests
+
+## MENU 
+
+rest1.print_name()
+Menu.print_menu()
 
 
      
@@ -219,11 +283,12 @@ while True:
                         tables_list[table_choice - 1].book_table(time_choice)
                         break
                 
-for i,val in enumerate(tables_list):
-    tables_list[i].print_time_slots()
+            
+
 
 #### TO DO
 ## - MENU
+## - class Menu created, work on logic
 ## - create more functions out of main logic ! ! ! 
 
 ## What is working : can book a table, printing tables, creating restaurant
