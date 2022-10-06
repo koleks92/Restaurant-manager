@@ -3,6 +3,9 @@ from curses.ascii import isdigit
 
 # Global variables
 
+## Checking if github sync works
+
+
 yes_no = ['yes','no']
 tables_list = []
 guest_list=[]
