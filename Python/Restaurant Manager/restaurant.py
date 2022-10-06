@@ -285,7 +285,6 @@ while True:
                 
             
 
-
 #### TO DO
 ## - MENU
 ## - class Menu created, work on logic
