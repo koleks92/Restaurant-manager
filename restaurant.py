@@ -1,15 +1,77 @@
 ## Simple restaurant manager to work on OOP in Python
 from curses.ascii import isdigit
 
+''' 
+TO DO
+-Make printing table more dynamic (fx if times changed, tables automaticly expands etc. !)
+-Screen clear !
+- Maybe GUI to practice ?
+'''
+
 # Global variables
 
-## Checking if github sync works
-
-
-yes_no = ['yes','no']
+yes_no = ['yes', 'no', 'y', 'n']
 tables_list = []
 guest_list=[]
 times = ["17-19","19-21","21-23"]
+
+
+def main():
+    global rest1
+    global tables
+    global table_seats
+    global s2t
+    rest1 = Restaurant(input("Please provide the name of the restaurant: "))
+    tables = rest1.tables() ## How many tables
+    table_seats = rest1.seats() ## How many seates for each table
+    s2t = rest1.seats_to_tables() ## Seats together with tables
+    create_tables() ## Create tables
+    guests() ## Create guests
+
+    
+
+    
+## MENU 
+    rest1.print_name()
+    menu=Menu() ## Create Menu
+    while True:
+        menu.print_menu() ## Print Menu
+        choice_5 = menu.menu_choice_5()
+        if choice_5 == '5': ## Exit
+            menu.exit()
+        elif choice_5 == '4': ## Restaurant Menu
+            while True:
+                menu.restaurant()
+                choice_3 = menu.menu_choice_3()
+                if choice_3 == '3': ## Go back to main menu
+                    break
+                elif choice_3 == '2': ## Create a new restaurant
+                    rest1 = Restaurant(input("Please provide the name of the restaurant: "))
+                    tables = rest1.tables() ## How many tables
+                    seats = rest1.seats() ## How many seates for each table
+                    s2t = rest1.seats_to_tables() ## Seats together with tables
+                    create_tables() ## Create tables
+                    print('New restaurant created !')
+                    input('Press any key to continue: ')
+                    break
+                elif choice_3 == '1': ## Restart restaurant
+                    create_tables()
+                    print('Restaurant restarted !')
+                    input('Press any key to continue: ')
+                    break
+
+        elif choice_5 == '3': ## Print Time Table
+            while True:
+                menu.time_table()
+                print(' ')
+                input('Press any key to continue: ')
+                break
+
+        elif choice_5 == '2': ## Booking system
+            break
+        elif choice_5 == '1': ## Guest managment
+            break
+
 
 class Menu:
     ''' Menu class'''
@@ -40,11 +102,13 @@ class Menu:
         print("1.Add a new guest")
         print("2.Remove guest")
         print("3.Go back to Main Menu")
+        print('')
 
     def booking(self):
         print("1.Make a new booking")
         print("2.Remove a booking")
         print("3.Go back to Main Menu")
+        print('')
 
     def time_table(self):
         for i,val in enumerate(tables_list):
@@ -54,7 +118,8 @@ class Menu:
         print("1.Restart restaurant !")
         print("2.Create a new restaurant !")
         print("3.Go back to Main menu")
-    
+        print('')
+
     def exit(self):
         choice_exit = input("Are you sure you want to quit ?: ")
         while choice_exit.lower() not in yes_no:
@@ -65,9 +130,6 @@ class Menu:
         else:
             self.print_menu()
             
-
-
-    
 
 
 class Restaurant: 
@@ -101,7 +163,7 @@ class Restaurant:
     
     def seats_to_tables(self):
         '''Create a dictionary with tables and seats accordingly'''
-        result = dict(zip(tables, seats))
+        result = dict(zip(tables, table_seats))
         return result
 
         
@@ -224,17 +286,9 @@ def guests():
 
 ## Restaurant Main
 
-rest1 = Restaurant(input("Please provide the name of the restaurant: "))
-tables = rest1.tables() ## How many tables
-seats = rest1.seats() ## How many seates for each table
-s2t = rest1.seats_to_tables() ## Seats together with tables
-create_tables() ## Create tables
-guests() ## Create guests
 
-## MENU 
+main()
 
-rest1.print_name()
-Menu.print_menu()
 
 
      
