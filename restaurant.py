@@ -279,11 +279,6 @@ def guests():
                 new=new_guest()
                 guest_list.append(new)
 
-####### Main logic
-
-
-##
-
 ## Restaurant Main
 
 
@@ -341,11 +336,4 @@ while True:
                         break
                 
             
-
-#### TO DO
-## - MENU
-## - class Menu created, work on logic
-## - create more functions out of main logic ! ! ! 
-
-## What is working : can book a table, printing tables, creating restaurant
 
