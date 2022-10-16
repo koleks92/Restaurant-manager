@@ -3,7 +3,7 @@ from curses.ascii import isdigit
 
 ''' 
 TO DO
--Booking need to be signed to the guest !
+-Print guest info next to the time table
 -Make printing table more dynamic (fx if times changed, tables automaticly expands etc. !)
 -Screen clear !
 - Maybe GUI to practice ?
@@ -165,6 +165,7 @@ class Menu:
         '''Printing Timetable'''
         for i,val in enumerate(tables_list):
             tables_list[i].print_time_slots()
+        
 
     def restaurant(self):
         '''Restaurant menu'''
@@ -303,21 +304,29 @@ class Table():
 
 class Guest:
     '''Guest class with name,phone,guestes'''
-    def __init__(self, name, phone, guests):
+    def __init__(self, name, phone, guests, b_table = -1, b_time = -1):
         self.name = name
         self.phone = phone 
         self.guests = guests
+        self.b_table = b_table ## Booked table
+        self.b_time = b_time ## Booked time
 
     def __str__(self):
+        print(self.b_table)
+        print(self.b_time)
         return f"{self.name}"
-    
+           
     def guest_creation(self):
         '''Printing if guest was created'''
         print(f"Guest {self.name} created !")
-    
-    def book_time_table(self):
-        '''Booked table number and time'''
 
+    def book_check(self):
+        if self.b_table != -1 and self.b_time != -1:
+            return True
+        else:
+            return False
+    
+    
 
 def new_guest():
     '''New guest creating func'''
@@ -409,14 +418,18 @@ def booking():
             break
         else:
             print_guest_list() 
-            choice_guest = int(input('Please choose a guest: ')) - 1 ## Guest choice to make a booking
-            while choice_guest not in range(len(guest_list)):
-                choice_guest = int(input('Please choose a guest: ')) - 1
+            choice_guest = input('Please choose a guest: ')## Guest choice to make a booking
+            while int(choice_guest) - 1 not in range(len(guest_list)):
+                choice_guest = input('Please choose a guest: ')
+            while guest_list[int(choice_guest) - 1].book_check() is True:
+                print('Guest has already booked a table !')
+                print('Please remove the booking, if you want to book another table')
+                return 1
             else:
                 no_seats = 0
                 table_number = []
                 for i,val in enumerate(tables_list): ## Checks if there is available tables for choosen amount of guests
-                    if guest_list[choice_guest].guests > tables_list[i].seats:
+                    if guest_list[int(choice_guest) - 1].guests > tables_list[i].seats:
                         no_seats += 1 ## For check if there are avalible tables
                     else:
                         table_number.append(i) ## Adding matching tables
@@ -425,13 +438,15 @@ def booking():
                     print('There are no avalible tables for this guest !')
                     break
                 else:
-                    table_choice = input("Please choose a table number: ")
-                    while int(table_choice) - 1 not in table_number or table_choice.isnumeric() is False:
+                    table_choice = input("Please choose a table number: ") ## Choose a table
+                    while table_choice.isnumeric() is False or int(table_choice) - 1 not in table_number:
                         print("Please choose a valid number !")
                         table_choice = input("Please choose a table number: ")
                     else:
-                        time_choice = tables_list[int(table_choice) - 1].book_check()
-                        tables_list[int(table_choice) - 1].book_table(time_choice)
+                        time_choice = tables_list[int(table_choice) - 1].book_check() ## Time choice with book check
+                        tables_list[int(table_choice) - 1].book_table(time_choice) ## Actual booking a time
+                        guest_list[int(choice_guest) - 1].b_table = int(table_choice) - 1 ## Assiging booking to the guest (table)
+                        guest_list[int(choice_guest) - 1].b_time = time_choice ## Assigning bookint to the guest (time)
                         break
 
 def remove_booking():
@@ -449,7 +464,13 @@ def remove_booking():
         if time_choice is False:
             break
         else:
-            tables_list[int(table_choice) - 1].unbook_table(time_choice) ## Removing the booking !
+            tables_list[int(table_choice) - 1].unbook_table(time_choice) ## Removing the booking
+            for guest in guest_list:
+                if guest.b_table == int(table_choice) - 1 and guest.b_time == time_choice:
+                    choice_guest = guest_list.index(guest) 
+            guest_list[choice_guest].b_table = -1 ## Assiging booking to the guest (table)
+            guest_list[choice_guest].b_time = -1 ## Assigning bookint to the guest (time)
+
             break
     
           
