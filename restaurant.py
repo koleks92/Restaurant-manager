@@ -3,11 +3,11 @@ from curses.ascii import isdigit
 
 ''' 
 TO DO
+-Booking need to be signed to the guest !
 -Make printing table more dynamic (fx if times changed, tables automaticly expands etc. !)
 -Screen clear !
 - Maybe GUI to practice ?
-- Edit guest, 
-- Guest to the book !
+- 
 '''
 
 # Global variables
@@ -93,11 +93,18 @@ def main():
                         elif choice_3 == '2': ## Remove a guest
                             if len(guest_list) == 0: ## Check if there a guests to remove
                                 print('There are no guests !')
-                                input('Press ENTER to continue: ')
+                                input('Press ENTER to continue !')
                                 break
                             guest_remove()
+                            input('Press ENTER to continue !')
                         elif choice_3 == '1': ## Edit a guest
-                            break
+                            if len(guest_list) == 0: ## Check if there a guests to remove
+                                print('There are no guests !')
+                                input('Press ENTER to continue !')
+                                break
+                            guest_edit()
+                            input('Press ENTER to continue !')
+                            
                 elif choice_3 == '1': ## Add a guest
                     new_guest()
                     input('Press ENTER to continue: ')
@@ -307,6 +314,10 @@ class Guest:
     def guest_creation(self):
         '''Printing if guest was created'''
         print(f"Guest {self.name} created !")
+    
+    def book_time_table(self):
+        '''Booked table number and time'''
+
 
 def new_guest():
     '''New guest creating func'''
@@ -315,7 +326,6 @@ def new_guest():
     while guest_phone.isnumeric() is False: ## Phone number
         print('Please provide correct phone number')
         guest_phone = input("Enter guest phone number: ")
-    
     guest_guests = input("Enter the number of guests: ")
     while guest_guests.isnumeric() is False: ## Number of guests
         print('Please provide a correct number !')
@@ -341,7 +351,36 @@ def guest_remove():
         print("Guest removed !")
     else:
         print('Guest not removed !')
-           
+
+def guest_edit():
+    '''Guest edit function'''
+    print_guest_list()
+    choice_guest = input('Please choose a guest: ') ## Guest choice to edit
+    while choice_guest.isnumeric() is False and choice_guest not in range(len(guest_list)):
+        choice_guest = input('Please choose a guest: ')
+    guest_name = input("Enter new guest name (ENTER to skip): ") ## Name
+    if guest_name == '':
+        guest_name = guest_list[int(choice_guest) - 1].name
+    guest_phone = input("Enter guest new phone number (ENTER to skip): ")
+    if guest_phone == '':
+        guest_phone = guest_list[int(choice_guest) - 1].phone
+    else:
+        while guest_phone.isnumeric() is False: ## Phone number
+            print('Please provide correct phone number')
+            guest_phone = input("Enter guest phone number: ")
+    guest_guests = input("Enter the new number of guests (ENTER to skip): ")
+    if guest_guests == '':
+        guest_guests = guest_list[int(choice_guest) - 1].guests
+    else:
+        while guest_guests.isnumeric() is False: ## Number of guests
+            print('Please provide a correct number !')
+            guest_guests = input("Enter the number of guests: ")
+        while int(guest_guests) > 10: ## Check for maximum number of guestes
+            print('Maximum number of guests is 10 !')
+            guest_guests = input("Enter the number of guest: ")
+    guest_list[int(choice_guest) - 1] = Guest(guest_name,int(guest_phone),int(guest_guests)) ## Create a guest
+    print('Guest edited !')    
+     
 def print_guest_list():
     '''Print guest list'''
     for i in range(len(guest_list)):
@@ -402,15 +441,15 @@ def remove_booking():
         for i,val in enumerate(tables_list): ## Print time slots
             table_number.append(i) ## Add tables to the list
             tables_list[i].print_time_slots()
-        table_choice = input("Please choose a table number: ")
+        table_choice = input("Please choose a table number: ") ## Table choice and check if booked
         while int(table_choice) - 1 not in table_number or table_choice.isnumeric() is False:
             print("Please choose a valid number !")
             table_choice = input("Please choose a table number: ")
-        time_choice = tables_list[int(table_choice) - 1].unbook_check()
+        time_choice = tables_list[int(table_choice) - 1].unbook_check() ## Choosing a time
         if time_choice is False:
             break
         else:
-            tables_list[int(table_choice) - 1].unbook_table(time_choice)
+            tables_list[int(table_choice) - 1].unbook_table(time_choice) ## Removing the booking !
             break
     
           
