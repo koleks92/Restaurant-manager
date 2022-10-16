@@ -6,7 +6,8 @@ TO DO
 -Make printing table more dynamic (fx if times changed, tables automaticly expands etc. !)
 -Screen clear !
 - Maybe GUI to practice ?
-- Remove booking, edit guest, 
+- Edit guest, 
+- Guest to the book !
 '''
 
 # Global variables
@@ -71,7 +72,8 @@ def main():
                 if choice_3 == '3': ## Go back to main menu
                     break
                 elif choice_3 == '2': ## Remove booking
-                    break
+                    remove_booking()
+                    input('Press ENTER to continue !')
                 elif choice_3 == '1': ## Book a table
                     booking()
                     input("Press ENTER to continue: ")
@@ -242,15 +244,33 @@ class Table():
         while True:
             choice = input('Please choose time slot: ')
             while choice not in times:
+                print('Please provide a correct time slot !')
                 choice = input('Please choose time slot: ')
             for t in times:
                 if choice == t:
                     a = times.index(t)
             if self.books[0][a] == 'XXXXXXX':
-                print("Table already booked !")
+                print("Time already booked !")
                 return False
             else:
                 return a
+    
+    def unbook_check(self):
+        '''Checking if table booked, else returning a time slot avalible to book'''
+        while True:
+            choice = input('Please choose time slot: ')
+            while choice not in times:
+                print('Please provide a correct time slot !')
+                choice = input('Please choose time slot: ')
+            for t in times:
+                if choice == t:
+                    b = times.index(t)
+            if self.books[0][b] == '       ':
+                print("Time is not booked!")
+                return False
+            else:
+                return b
+
                     
     def fully_booked(self): 
         '''Fully book func'''
@@ -267,6 +287,11 @@ class Table():
         '''Actual booking func'''
         self.books[0][a] = 'XXXXXXX'
         print('Table booked !')
+
+    def unbook_table(self, b):
+        '''Remove booking func'''
+        self.books[0][b] = '       '
+        print('Booking removed !')
 
 
 class Guest:
@@ -291,10 +316,10 @@ def new_guest():
         print('Please provide correct phone number')
         guest_phone = input("Enter guest phone number: ")
     
-    guest_guests = input("Enter the number of guest: ")
+    guest_guests = input("Enter the number of guests: ")
     while guest_guests.isnumeric() is False: ## Number of guests
         print('Please provide a correct number !')
-        guest_guests = input("Enter the number of guest: ")
+        guest_guests = input("Enter the number of guests: ")
     while int(guest_guests) > 10: ## Check for maximum number of guestes
         print('Maximum number of guests is 10 !')
         guest_guests = input("Enter the number of guest: ")
@@ -328,6 +353,7 @@ def create_tables():
         tables_list.append(Table(i, [["       "] * len(times) for i in range(1)], s2t[i+1]))
 
 def booking():
+    '''Booking table function'''
     while True:
         fully_booked = True 
         for i, val in enumerate(tables_list): ## Check if fully booked
@@ -360,16 +386,34 @@ def booking():
                     print('There are no avalible tables for this guest !')
                     break
                 else:
-                    table_choice = int(input("Please choose a table number: ")) 
-                    while table_choice - 1 not in table_number:
+                    table_choice = input("Please choose a table number: ")
+                    while int(table_choice) - 1 not in table_number or table_choice.isnumeric() is False:
                         print("Please choose a valid number !")
-                        table_choice = int(input("Please choose a table number: "))
+                        table_choice = input("Please choose a table number: ")
                     else:
-                        time_choice = tables_list[table_choice - 1].book_check()
-                        tables_list[table_choice - 1].book_table(time_choice)
+                        time_choice = tables_list[int(table_choice) - 1].book_check()
+                        tables_list[int(table_choice) - 1].book_table(time_choice)
                         break
 
-        
+def remove_booking():
+    '''Remove a booking function'''
+    while True:
+        table_number = []
+        for i,val in enumerate(tables_list): ## Print time slots
+            table_number.append(i) ## Add tables to the list
+            tables_list[i].print_time_slots()
+        table_choice = input("Please choose a table number: ")
+        while int(table_choice) - 1 not in table_number or table_choice.isnumeric() is False:
+            print("Please choose a valid number !")
+            table_choice = input("Please choose a table number: ")
+        time_choice = tables_list[int(table_choice) - 1].unbook_check()
+        if time_choice is False:
+            break
+        else:
+            tables_list[int(table_choice) - 1].unbook_table(time_choice)
+            break
+    
+          
 
 main()
 
